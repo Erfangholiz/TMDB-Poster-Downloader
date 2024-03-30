@@ -1,3 +1,4 @@
+<img src="TMDB-Poster-Downloader-Logo.png">
 <h1 align = "center">TMDB-Poster-Downloader</h1>
 <p align = "center">A simple program written in python that recieves a TMDB API key and a movie id and downloads all of the images available on the website.</p>
 
