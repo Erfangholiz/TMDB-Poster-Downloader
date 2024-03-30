@@ -2,7 +2,6 @@ import requests
 import os
 import tkinter as tk
 import ttkbootstrap as ttk 
-from tkinter import messagebox
 
 def set_API_key():
     API_file = open('./API_key.txt', 'w')
