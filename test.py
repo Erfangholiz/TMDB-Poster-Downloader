@@ -26,3 +26,6 @@ for category in text:
             handler.write(img_data)
         a += 1
 
+
+
+
