@@ -3,6 +3,12 @@ import os
 import tkinter as tk
 import ttkbootstrap as ttk 
 
+def set_API_key():
+    API_file = open('./API_key.txt', 'w')
+    API_key = API_entry_StringVar.get()
+    API_file.write(API_key)
+    API_file.close()
+
 # API_KEY = input ('Enter TMDB API key: ')
 # movie_id = input('Enter movie_id: ')
 # url = f"https://api.themoviedb.org/3/movie/{movie_id}/images?api_key={API_KEY}"
@@ -29,12 +35,13 @@ root = tk.Tk()
 root.title('TMDB-Poster-Downloader')
 root.geometry('400x200')
 
-API_key_
+API_entry_StringVar = tk.StringVar()
+API_entry_StringVar.set('blah')
 
 input_frame = ttk.Frame(master = root)
 API_label = ttk.Label(master = input_frame, text = 'API key:')
-API_entry = ttk.Entry(master = input_frame, text = 'blah')
-API_button = ttk.Button(master = input_frame, text = 'Confirm')
+API_entry = ttk.Entry(master = input_frame, textvariable = API_entry_StringVar)
+API_button = ttk.Button(master = input_frame, text = 'Confirm', command = set_API_key)
 API_label.pack(side = 'left')
 API_entry.pack(side = 'left', padx = 10)
 API_button.pack(side = 'left')
