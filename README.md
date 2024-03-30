@@ -1,4 +1,4 @@
-# TMDB-Poster-Downloader
+# <center>TMDB-Poster-Downloader</center>
 <center>A simple program written in python that recieves a TMDB API key and a movie id and downloads all of the images available on the website.</center>
 
 ## Use cases
