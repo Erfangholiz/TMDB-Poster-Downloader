@@ -2,6 +2,7 @@ import requests
 import os
 import tkinter as tk
 import ttkbootstrap as ttk 
+from tkinter import messagebox
 
 def set_API_key():
     API_file = open('./API_key.txt', 'w')
@@ -37,22 +38,24 @@ def download():
             root.update()
             os.makedirs(f"./Images/{category}", exist_ok = True)
             for image in text[f"{category}"]:
-                img_url = "https://image.tmdb.org/t/p/w1280" + image["file_path"]
-                img_data = requests.get(img_url).content
-                with open(f'Images/{category}/{str(image["width"])}x{str(image["height"])} {category} ({str(a)}).jpg', 'wb') as handler:
-                    handler.write(img_data)
-                progress_label_StringVar.set(str(a + 1) + f'/{str(size[b])} Downloaded')
-                root.update()
-                a += 1
+                if root.winfo_viewable():
+                    img_url = "https://image.tmdb.org/t/p/w1280" + image["file_path"]
+                    img_data = requests.get(img_url).content
+                    with open(f'Images/{category}/{str(image["width"])}x{str(image["height"])} {category} ({str(a)}).jpg', 'wb') as handler:
+                        handler.write(img_data)
+                    progress_label_StringVar.set(str(a + 1) + f'/{str(size[b])} Downloaded')
+                    root.update()
+                    a += 1
+                else:
+                    exit()
             a = 0
             b += 1
     status_label_StringVar.set('Finished!')
-                
 
 
 root = tk.Tk()
 root.title('TMDB-Poster-Downloader')
-root.geometry('400x200')
+root.geometry('400x200')                
 
 # API inputs
 API_input_frame = ttk.Frame(master = root)
@@ -94,6 +97,5 @@ status_label.pack(pady = 10)
 progress_label_StringVar = tk.StringVar()
 progress_label = ttk.Label(master = root, textvariable = progress_label_StringVar)
 progress_label.pack()
-
 root.mainloop()
 
