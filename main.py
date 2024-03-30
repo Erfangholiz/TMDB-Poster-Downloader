@@ -19,7 +19,6 @@ def download():
     movie_id = ID_entry_StringVar.get()
     url = f"https://api.themoviedb.org/3/movie/{movie_id}/images?api_key={API_KEY}"
 
-
     response = requests.get(url)
     
     if response.status_code != 200:
