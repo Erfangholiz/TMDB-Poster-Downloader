@@ -3,6 +3,7 @@ import os
 import tkinter as tk
 import ttkbootstrap as ttk 
 
+#Saves the API so there's no need to enter it every time.
 def set_API_key():
     API_file = open('./API_key.txt', 'w')
     API_key = API_entry_StringVar.get()
@@ -17,6 +18,7 @@ def download():
     
     API_KEY = API_entry_StringVar.get()
     movie_id = ID_entry_StringVar.get()
+    #The url provided by TMDB for retrieving movie images, https://developer.themoviedb.org/reference/movie-images
     url = f"https://api.themoviedb.org/3/movie/{movie_id}/images?api_key={API_KEY}"
 
     response = requests.get(url)
@@ -24,34 +26,50 @@ def download():
     if response.status_code != 200:
         status_label_StringVar.set('Error ' + str(response.status_code) + ", Please make sure you've entered the right information!")
     else:
+        #Using a JSON format for the response so it's easier to sift through
         text = response.json()
-        a = 0
-        b = 0
+        
+        #An integer to keep track of the names of the files, 2000x3000 Poster (img_number)
+        img_number = 1
+        
+        #An integer to keep track of the number of files to be downloaded in each category (Backdrops, Logos, Posters)
+        category_number = 0
+        
+        #Deleting the "id" key from the JSON response because it would mess up the for loop as it's numeric and can't be iterated.
         del text["id"]
+        
+        #Storing the size of every category and making directories
         size = []
         for category in text:
             size.append(len(text[f"{category}"]))
             os.makedirs(f"./Images/{category.title()}", exist_ok = True)
+            
         for category in text:
             status_label_StringVar.set(category.title())
             for image in text[f"{category}"]:
+                #Checks every iteration to see if the user has closed the window so it can stop running the script if so
                 if root.winfo_viewable():
-                    img_url = "https://image.tmdb.org/t/p/w1280" + image["file_path"]
+                    img_url = "https://image.tmdb.org/t/p/original" + image["file_path"]
+                    img_extension = image["file_path"].split('.')[1]
                     img_data = requests.get(img_url).content
-                    with open(f'Images/{category.title()}/{str(image["width"])}x{str(image["height"])} {category.title()[0:-1]} ({str(a)}).jpg', 'wb') as handler:
+                    #Saving the image in this format: widthxheight Category (img_number).img_extension
+                    # In the Images/Category/ subdirectory
+                    with open(f'Images/{category.title()}/{str(image["width"])}x{str(image["height"])} {category.title()[0:-1]} ({str(img_number)}).{img_extension}', 'wb') as handler:
                         handler.write(img_data)
-                    progress_label_StringVar.set(str(a + 1) + f'/{str(size[b])} Downloaded')
+                    progress_label_StringVar.set(str(img_number) + f'/{str(size[category_number])} Downloaded')
                     root.update()
-                    a += 1
+                    img_number += 1
                 else:
+                    #If the window has been closed, the program gets killed
                     exit()
-            a = 0
-            b += 1
+            img_number = 1
+            category_number += 1
         status_label_StringVar.set('Finished!')
         progress_label_StringVar.set(f'{str(sum(size))}/{str(sum(size))} Downloaded')
         root.update()
 
 
+#Root definition
 root = tk.Tk()
 root.title('TMDB-Poster-Downloader')
 root.geometry('400x200')                
