@@ -31,15 +31,14 @@ def download():
         size = []
         for category in text:
             size.append(len(text[f"{category}"]))
+            os.makedirs(f"./Images/{category.title()}", exist_ok = True)
         for category in text:
-            status_label_StringVar.set(category)
-            root.update()
-            os.makedirs(f"./Images/{category}", exist_ok = True)
+            status_label_StringVar.set(category.title())
             for image in text[f"{category}"]:
                 if root.winfo_viewable():
                     img_url = "https://image.tmdb.org/t/p/w1280" + image["file_path"]
                     img_data = requests.get(img_url).content
-                    with open(f'Images/{category}/{str(image["width"])}x{str(image["height"])} {category} ({str(a)}).jpg', 'wb') as handler:
+                    with open(f'Images/{category.title()}/{str(image["width"])}x{str(image["height"])} {category.title()[0:-1]} ({str(a)}).jpg', 'wb') as handler:
                         handler.write(img_data)
                     progress_label_StringVar.set(str(a + 1) + f'/{str(size[b])} Downloaded')
                     root.update()
@@ -48,7 +47,9 @@ def download():
                     exit()
             a = 0
             b += 1
-    status_label_StringVar.set('Finished!')
+        status_label_StringVar.set('Finished!')
+        progress_label_StringVar.set(f'{str(sum(size))}/{str(sum(size))} Downloaded')
+        root.update()
 
 
 root = tk.Tk()
