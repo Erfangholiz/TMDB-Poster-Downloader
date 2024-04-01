@@ -3,7 +3,7 @@ import os
 import tkinter as tk
 import ttkbootstrap as ttk 
 
-#Saves the API so there's no need to enter it every time.
+#Saves the API key so there's no need to enter it every time.
 def set_API_key():
     API_file = open('./API_key.txt', 'w')
     API_key = API_entry_StringVar.get()
